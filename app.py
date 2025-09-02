@@ -4,21 +4,34 @@ from datetime import datetime, timedelta
 import random
 from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres.bwvzagkmjuxwnnzugyen:Tanushkonda3@aws-1-ap-south-1.pooler.supabase.com:6543/postgres'
+# Database configuration
+db_url = os.getenv("DATABASE_URL")
+if db_url and db_url.startswith("postgres://"):  # fix for SQLAlchemy compatibility
+    db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 db = SQLAlchemy(app)
-app.secret_key = 'your_secret_key_here'  # Needed for sessions to work securely
+app.secret_key = os.getenv("SECRET_KEY", "fallback_secret_key")  # Needed for sessions to work securely
 # Email Configuration
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'yourtodomate@gmail.com'  # Your email address
-app.config['MAIL_PASSWORD'] = 'zogl ggjy qglb llef'            # Your generated app password
-app.config['MAIL_DEFAULT_SENDER'] = 'yourtodomate@gmail.com'
+app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
+app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_USERNAME")
 
 mail = Mail(app)
+
+# app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+# app.config['MAIL_PORT'] = 587
+# app.config['MAIL_USE_TLS'] = True
+# app.config['MAIL_USERNAME'] = 'yourtodomate@gmail.com'  # Your email address
+# app.config['MAIL_PASSWORD'] = 'zogl ggjy qglb llef'            # Your generated app password
+# app.config['MAIL_DEFAULT_SENDER'] = 'yourtodomate@gmail.com'
+
 
 
 class Todo(db.Model):
