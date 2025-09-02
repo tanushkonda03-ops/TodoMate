@@ -286,6 +286,7 @@ def set_new_password():
 def view_todo():
     authflag = session.get('logged_in', False)
     username = session.get('username', '')
+
     if authflag:
         user = User.query.filter_by(Uname=username).first()
         if user and not user.is_verified:
@@ -293,23 +294,37 @@ def view_todo():
         if user:
             todos = Todo.query.filter_by(user_id=user.Uid).all()
         else:
-            todos=[]
-        # Separate active and completed to help view.html
+            todos = []
+        # Separate active and completed
         active_todos = [t for t in todos if t.status == 'active']
         completed_todos = [t for t in todos if t.status == 'completed']
     else:
         todos = session.get('guest_todos', [])
+        # Convert guest string dates like "YYYY-MM-DD HH:MM" into datetime
         for t in todos:
-            if isinstance(t.get('due_date'), str):
+            dd = t.get('due_date')
+            if isinstance(dd, str) and dd.strip():
                 try:
-                    t['due_date'] = datetime.fromisoformat(t['due_date'])
+                    from datetime import datetime
+                    t['due_date'] = datetime.strptime(dd, "%Y-%m-%d %H:%M")
                 except ValueError:
-                    t['due_date'] = None  # fallback if invalid string
+                    t['due_date'] = None  # ignore bad/old formats safely
 
-        active_todos = [t for t in todos if t['status'] == 'active']
-        completed_todos = [t for t in todos if t['status'] == 'completed']
-    
-    return render_template('view.html', authflag=authflag, username=username, todos=todos, now=datetime.now(), active_todos=active_todos, completed_todos=completed_todos)
+        active_todos = [t for t in todos if t.get('status') == 'active']
+        completed_todos = [t for t in todos if t.get('status') == 'completed']
+
+    from datetime import datetime
+    # Use UTC for consistency with your model defaults
+    now_utc = datetime.utcnow()
+    return render_template(
+        'view.html',
+        authflag=authflag,
+        username=username,
+        todos=todos,
+        now=now_utc,
+        active_todos=active_todos,
+        completed_todos=completed_todos
+    )
 
 #To help edit route
 @app.template_filter('datetime_local_string')
@@ -317,6 +332,18 @@ def datetime_local_string(value):
     if not value:
         return ''
     return value.strftime('%Y-%m-%dT%H:%M')
+@app.template_filter('fmt_dt')
+def fmt_dt(value):
+    """Format a datetime as 'YYYY-MM-DD HH:MM' without crashing if it's already a string/None."""
+    from datetime import datetime
+    if value is None:
+        return ''
+    if isinstance(value, str):
+        return value
+    if isinstance(value, datetime):
+        return value.strftime('%Y-%m-%d %H:%M')
+    return str(value)
+
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_todo(id):
