@@ -168,7 +168,7 @@
         }
 
         .navbar-brand img {
-            
+
             transition: var(--transition);
             border-radius: 8px;
         }
@@ -680,38 +680,46 @@
                     height="31" class="d-inline-block align-text-top">
                 <b>TodoMate</b>
             </a>
+
+            <!-- 👇 This button makes the menu collapse on mobile -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">
                             <i class="fas fa-plus-circle me-1"></i>Add Todo
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/view">
+                        <a class="nav-link {% if request.path == '/view' %}active{% endif %}" href="/view">
                             <i class="fas fa-list me-1"></i>View Todo
                         </a>
                     </li>
                 </ul>
-            </div>
-            <div class="d-flex">
-                {% if authflag %}
-                <div>
-                    <b><i class="fas fa-user me-1"></i>Welcome, {{ username }}</b>
-                    <a href="/logout" class="btn btn-danger ms-2 btn-sm">
-                        <i class="fas fa-sign-out-alt me-1"></i>Logout
-                    </a>
+                <div class="d-flex">
+                    {% if authflag %}
+                    <div>
+                        <b><i class="fas fa-user me-1"></i>Welcome, {{ username }}</b>
+                        <a href="/logout" class="btn btn-danger ms-2 btn-sm">
+                            <i class="fas fa-sign-out-alt me-1"></i>Logout
+                        </a>
+                    </div>
+                    {% else %}
+                    <form action="/login" method="GET">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </button>
+                    </form>
+                    {% endif %}
                 </div>
-                {% else %}
-                <form action="/login" method="GET">
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-sign-in-alt me-1"></i>Login
-                    </button>
-                </form>
-                {% endif %}
             </div>
         </div>
     </nav>
+
 
     <div class="container my-3">
         <div class="todo-card">
