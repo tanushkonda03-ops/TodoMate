@@ -13,12 +13,13 @@ if db_url and db_url.startswith("postgres://"):  # fix for SQLAlchemy compatibil
     db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url
+from sqlalchemy.pool import NullPool
+
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-    "pool_pre_ping": True,
-    "pool_recycle": 300,     # recycle connections every 5 minutes
-    "pool_size": 5,          # max connections
-    "max_overflow": 2        # allow a couple extra when busy
+    "poolclass": NullPool,   # disable connection pooling
+    "pool_pre_ping": True    # check connection before using it
 }
+
 db = SQLAlchemy(app)
 app.secret_key = os.getenv("SECRET_KEY", "fallback_secret_key")  # Needed for sessions to work securely
 # Email Configuration
