@@ -8,7 +8,20 @@ import os
 
 app = Flask(__name__)
 # Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+# Database configuration
+db_url = os.getenv("DATABASE_URL")
+
+# Fix for old-style URLs
+if db_url and db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
+
+# Auto-detect Render environment
+if os.getenv("RENDER"):  # Render sets this env var automatically
+    print("Running on Render → using internal DB URL")
+else:
+    print("Running locally → make sure you exported the external DB URL")
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 app.secret_key = os.getenv("SECRET_KEY", "fallback_secret_key")  # Needed for sessions to work securely
