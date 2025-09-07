@@ -8,13 +8,8 @@ import os
 
 app = Flask(__name__)
 # Database configuration
-db_url = os.getenv("DATABASE_URL")
-if db_url and db_url.startswith("postgres://"):  # fix for SQLAlchemy compatibility
-    db_url = db_url.replace("postgres://", "postgresql+psycopg2://", 1)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = db_url
-from sqlalchemy.pool import NullPool
-
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 app.secret_key = os.getenv("SECRET_KEY", "fallback_secret_key")  # Needed for sessions to work securely
 # Email Configuration
