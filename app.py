@@ -15,11 +15,6 @@ if db_url and db_url.startswith("postgres://"):  # fix for SQLAlchemy compatibil
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 from sqlalchemy.pool import NullPool
 
-app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-    "poolclass": NullPool,   # disable connection pooling
-    "pool_pre_ping": True    # check connection before using it
-}
-
 db = SQLAlchemy(app)
 app.secret_key = os.getenv("SECRET_KEY", "fallback_secret_key")  # Needed for sessions to work securely
 # Email Configuration
