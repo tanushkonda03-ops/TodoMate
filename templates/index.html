@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='todo-favicon.png') }}">
-    <title>Add Todo - TodoMate</title>
+    <title>Add Todo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -13,42 +13,32 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <style>
-        :root[data-theme="dark"] {
-            --primary-gradient-start: #667eea;
-            --primary-gradient-end: #764ba2;
-            --bg-overlay-1: rgba(120, 119, 198, 0.3);
-            --bg-overlay-2: rgba(255, 119, 198, 0.3);
-            --bg-overlay-3: rgba(120, 219, 255, 0.3);
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --card-border: rgba(255, 255, 255, 0.2);
-            --text-primary: white;
-            --text-secondary: rgba(255, 255, 255, 0.9);
-            --text-muted: rgba(255, 255, 255, 0.6);
-            --input-bg: rgba(255, 255, 255, 0.1);
-            --input-border: rgba(255, 255, 255, 0.3);
-            --input-focus-bg: rgba(255, 255, 255, 0.15);
-            --input-focus-border: rgba(255, 255, 255, 0.6);
-            --navbar-bg: rgba(255, 255, 255, 0.1);
-            --shape-gradient: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-        }
-
-        :root[data-theme="light"] {
-            --primary-gradient-start: #667eea;
-            --primary-gradient-end: #764ba2;
-            --bg-overlay-1: rgba(102, 126, 234, 0.15);
-            --bg-overlay-2: rgba(118, 75, 162, 0.15);
-            --bg-overlay-3: rgba(102, 185, 234, 0.15);
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --card-border: rgba(102, 126, 234, 0.2);
-            --text-primary: #1e293b;
-            --text-secondary: #334155;
-            --text-muted: #64748b;
-            --input-bg: rgba(255, 255, 255, 0.9);
-            --input-border: rgba(102, 126, 234, 0.3);
-            --input-focus-bg: white;
-            --input-focus-border: #667eea;
-            --navbar-bg: rgba(255, 255, 255, 0.95);
-            --shape-gradient: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        :root {
+            --primary-color: #3b82f6;
+            --primary-light: #60a5fa;
+            --primary-dark: #1e40af;
+            --secondary-color: #1e293b;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --dark-bg: #0f172a;
+            --dark-card: #1e293b;
+            --dark-border: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-500: #64748b;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --border-radius: 12px;
+            --border-radius-lg: 20px;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -59,14 +49,15 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+            background: var(--dark-bg);
             min-height: 100vh;
             line-height: 1.6;
             position: relative;
             overflow-x: hidden;
-            transition: all 0.3s ease;
+            color: var(--text-primary);
         }
 
+        /* Removed gradient background, using solid dark color */
         body::before {
             content: '';
             position: fixed;
@@ -74,17 +65,18 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background:
-                radial-gradient(circle at 20% 50%, var(--bg-overlay-1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, var(--bg-overlay-2) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, var(--bg-overlay-3) 0%, transparent 50%);
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
             z-index: -1;
             animation: backgroundShift 15s ease-in-out infinite;
         }
 
         @keyframes backgroundShift {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.95;
+            }
         }
 
         .floating-shapes {
@@ -97,7 +89,7 @@
 
         .shape {
             position: absolute;
-            background: var(--shape-gradient);
+            background: linear-gradient(45deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.02));
             border-radius: 50%;
             animation: float 8s ease-in-out infinite;
         }
@@ -135,21 +127,24 @@
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-30px) rotate(10deg); }
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-30px) rotate(10deg);
+            }
         }
 
-        /* Navbar */
+        /* Updated navbar styling for dark theme */
         .navbar {
-            background: var(--navbar-bg) !important;
+            background: rgba(30, 41, 59, 0.95) !important;
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--card-border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid var(--dark-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             padding: 1rem 0;
             position: sticky;
             top: 0;
             z-index: 1000;
-            transition: all 0.3s ease;
         }
 
         .navbar-brand {
@@ -159,15 +154,16 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
 
         .navbar-brand:hover {
             transform: translateY(-2px) scale(1.05);
+            color: var(--primary-light) !important;
         }
 
         .navbar-brand img {
-            transition: all 0.3s ease;
+            transition: var(--transition);
             border-radius: 8px;
         }
 
@@ -179,66 +175,89 @@
             color: var(--text-secondary) !important;
             font-weight: 500;
             padding: 0.5rem 1rem !important;
-            border-radius: 12px;
+            border-radius: var(--border-radius);
             margin: 0 0.25rem;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-link:hover::before {
+            left: 100%;
         }
 
         .nav-link:hover,
         .nav-link.active {
-            color: var(--text-primary) !important;
-            background-color: rgba(102, 126, 234, 0.15);
+            color: var(--primary-light) !important;
+            background-color: rgba(59, 130, 246, 0.1);
             transform: translateY(-2px);
         }
 
-        /* Theme Toggle Button */
-        .theme-toggle {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: var(--primary-light);
             transition: all 0.3s ease;
-            margin-left: 1rem;
+            transform: translateX(-50%);
         }
 
-        .theme-toggle:hover {
-            transform: translateY(-2px) scale(1.1);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        .nav-link:hover::after {
+            width: 100%;
         }
 
-        .theme-toggle i {
-            color: var(--text-primary);
-            font-size: 1.2rem;
-        }
-
-        /* Buttons */
         .btn {
             font-weight: 500;
-            border-radius: 12px;
+            border-radius: var(--border-radius);
             padding: 0.5rem 1.5rem;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             border: none;
             position: relative;
             overflow: hidden;
         }
 
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--shadow-xl);
         }
 
         .btn-success {
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            color: white;
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+            background: linear-gradient(135deg, var(--danger-color), #dc2626);
+            color: white;
         }
 
         /* Main Container */
@@ -248,23 +267,32 @@
             padding: 0 1rem;
         }
 
-        /* Todo Card */
+        /* Updated card styling for dark theme with better contrast */
         .todo-card {
-            background: var(--card-bg);
+            background: var(--dark-card);
             backdrop-filter: blur(20px);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 var(--card-border);
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             padding: 2.5rem;
             margin: 2rem 0;
-            border: 1px solid var(--card-border);
+            border: 1px solid var(--dark-border);
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
+            animation: cardGlow 6s ease-in-out infinite;
+        }
+
+        @keyframes cardGlow {
+            0%, 100% {
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            }
+            50% {
+                box-shadow: 0 12px 40px rgba(59, 130, 246, 0.1);
+            }
         }
 
         .todo-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 20px 50px rgba(59, 130, 246, 0.15);
         }
 
         .todo-card::before {
@@ -274,7 +302,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary-gradient-start), var(--primary-gradient-end));
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light), var(--success-color));
         }
 
         .todo-card h3 {
@@ -285,7 +313,8 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
         }
 
         .todo-card h3::before {
@@ -293,59 +322,86 @@
             display: inline-block;
             width: 3rem;
             height: 3rem;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1));
             border-radius: 50%;
             text-align: center;
             line-height: 3rem;
             font-size: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             animation: bounce 2s ease-in-out infinite;
         }
 
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
         }
 
-        /* Form Elements */
+        /* Enhanced Form Styling */
         .form-label {
-            color: var(--text-secondary);
+            color: var(--text-primary);
             font-weight: 600;
             margin-bottom: 0.75rem;
             font-size: 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
-        .form-control, .form-select {
-            background: var(--input-bg);
-            border: 1px solid var(--input-border);
-            border-radius: 12px;
+        .form-label[data-icon="📝"]::before {
+            content: '📝';
+        }
+
+        .form-label[data-icon="📄"]::before {
+            content: '📄';
+        }
+
+        .form-label[data-icon="📅"]::before {
+            content: '📅';
+        }
+
+        /* Updated form control styling for dark theme */
+        .form-control,
+        .form-select {
+            background: rgba(51, 65, 85, 0.5);
+            border: 1px solid var(--dark-border);
+            border-radius: var(--border-radius);
             color: var(--text-primary);
             padding: 0.875rem 1rem;
             font-size: 1rem;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             backdrop-filter: blur(15px);
         }
 
-        .form-control:focus, .form-select:focus {
-            background: var(--input-focus-bg);
-            border-color: var(--input-focus-border);
-            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+        .form-control:focus,
+        .form-select:focus {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
             color: var(--text-primary);
             transform: translateY(-3px);
         }
 
         .form-control::placeholder {
-            color: var(--text-muted);
+            color: var(--text-secondary);
             font-style: italic;
         }
 
-        /* Submit Button */
+        .mb-3 {
+            margin-bottom: 2rem !important;
+            position: relative;
+        }
+
+        /* Enhanced Submit Button */
         .btn-outline-dark {
-            background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: white;
             border: none;
             padding: 1rem 3rem;
@@ -353,67 +409,235 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
+            border-radius: var(--border-radius);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .btn-outline-dark::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .btn-outline-dark:hover::before {
+            left: 100%;
         }
 
         .btn-outline-dark:hover {
-            background: linear-gradient(135deg, var(--primary-gradient-end), var(--primary-gradient-start));
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
             color: white;
             transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
         }
 
-        /* Alert */
+        .btn-outline-dark:active {
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-dark.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .btn-outline-dark.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Enhanced Alert Styling */
         .alert {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 12px;
-            color: var(--text-primary);
-            backdrop-filter: blur(10px);
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: var(--border-radius);
+            padding: 1rem 1.5rem;
             margin-top: 1.5rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            backdrop-filter: blur(15px);
+            position: relative;
+            overflow: hidden;
+            animation: slideInUp 0.5s ease-out;
         }
 
-        /* Guest Modal */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert::before {
+            content: '\f06a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fbbf24;
+            font-size: 1.2rem;
+        }
+
+        .alert {
+            padding-left: 3.5rem;
+        }
+
+        /* Form Text */
+        .form-text {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-style: italic;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-text::before {
+            content: '\f05a';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #fbbf24;
+        }
+
+        /* Required Asterisk */
+        .text-danger {
+            color: #ff6b6b !important;
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        /* Enhanced Modal */
         .modal-content {
-            background: var(--card-bg);
+            background: var(--dark-card);
             backdrop-filter: blur(20px);
-            border-radius: 20px;
-            border: 1px solid var(--card-border);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--dark-border);
+            border-radius: var(--border-radius-lg);
+            color: var(--text-primary);
         }
 
         .modal-header {
-            background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
-            border-radius: 20px 20px 0 0;
-            border-bottom: none;
-            color: white;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-bottom: 1px solid var(--dark-border);
         }
 
-        .modal-body {
+        .modal-footer {
+            border-top: 1px solid var(--dark-border);
+        }
+
+        /* Welcome Text */
+        .navbar .d-flex b {
             color: var(--text-primary);
+            font-weight: 600;
+            margin-right: 0.5rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
-        /* Responsive */
+        /* Responsive Design */
         @media (max-width: 768px) {
+            .todo-card {
+                padding: 2rem 1.5rem;
+                margin: 1rem 0.5rem;
+            }
+
             .container {
-                margin: 1rem auto;
                 padding: 0 0.5rem;
             }
 
-            .todo-card {
-                padding: 1.5rem;
-                margin: 1rem 0;
+            .navbar-brand {
+                font-size: 1.25rem;
+            }
+
+            .form-control.w-25 {
+                width: 100% !important;
             }
 
             .todo-card h3 {
                 font-size: 1.5rem;
             }
 
-            .theme-toggle {
-                margin-left: 0.5rem;
+            .btn-outline-dark {
+                padding: 0.875rem 2rem;
+                font-size: 1rem;
             }
+        }
+
+        @media (max-width: 480px) {
+            .todo-card h3::before {
+                width: 2.5rem;
+                height: 2.5rem;
+                line-height: 2.5rem;
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Enhanced Animations */
+        .todo-card {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .navbar {
+            animation: slideInDown 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Input hover effects */
+        .mb-3:hover .form-control {
+            border-color: var(--primary-light);
+            transform: translateY(-1px);
         }
     </style>
 </head>
@@ -426,124 +650,200 @@
         <div class="shape"></div>
     </div>
 
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
-                <img src="{{ url_for('static', filename='todo-removebg-preview.png') }}" alt="Logo" width="32" height="31">
+                <img src="{{ url_for('static', filename='todo-removebg-preview.png') }}" alt="Logo" width="32"
+                    height="31" class="d-inline-block align-text-top">
                 <b>TodoMate</b>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link active" href="/">Add Todo</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/view">View Todo</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">
+                            <i class="fas fa-plus-circle me-1"></i>Add Todo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/view' %}active{% endif %}" href="/view">
+                            <i class="fas fa-list me-1"></i>View Todo
+                        </a>
+                    </li>
                 </ul>
-                <div class="d-flex align-items-center">
+                <div class="d-flex">
                     {% if authflag %}
-                    <span style="color: var(--text-primary); font-weight: 600; margin-right: 1rem;">Welcome {{ username }}</span>
-                    <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+                    <div>
+                        <b><i class="fas fa-user me-1"></i>Welcome, {{ username }}</b>
+                        <a href="/logout" class="btn btn-danger ms-2 btn-sm">
+                            <i class="fas fa-sign-out-alt me-1"></i>Logout
+                        </a>
+                    </div>
                     {% else %}
-                    <a href="/login" class="btn btn-success btn-sm">Login</a>
+                    <form action="/login" method="GET">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </button>
+                    </form>
                     {% endif %}
-                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                        <i class="fas fa-moon"></i>
-                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="container">
-        <div class="todo-card">
-            <h3><b>Add New Todo</b></h3>
-            <form action="/" method="POST">
-                <div class="mb-3">
-                    <label for="title" class="form-label" data-icon="📝"><b>Todo Title:</b></label>
-                    <input type="text" class="form-control" id="title" placeholder="Enter todo's title here..." name="title" required>
-                </div>
-                <div class="mb-3">
-                    <label for="desc" class="form-label" data-icon="📄"><b>Todo Description:</b></label>
-                    <textarea class="form-control" id="desc" placeholder="Enter todo's description..." name="desc" rows="3"></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="due_date" class="form-label" data-icon="📅"><b>Due Date:</b></label>
-                    <input type="datetime-local" class="form-control" id="due_date" name="due_date">
-                </div>
-                <button type="submit" class="btn-outline-dark w-100">Add Todo</button>
-            </form>
 
-            {% if error_message %}
-            <div class="alert" role="alert">{{ error_message }}</div>
-            {% endif %}
+    <div class="container my-3">
+        <div class="todo-card">
+            <h3><b>Add Todo</b></h3>
+            <form action="/" method="POST" id="todoForm">
+                <div class="mb-3">
+                    <label for="title" class="form-label" data-icon="📝">
+                        <b>Todo title: <span class="text-danger">*</span></b>
+                    </label>
+                    <input type="text" class="form-control" id="title" value="{{ form_title or '' }}"
+                        placeholder="Enter todo's title here..." name="title">
+                </div>
+                <div class="mb-3">
+                    <label for="desc" class="form-label" data-icon="📄">
+                        <b>Todo Description:</b>
+                    </label>
+                    <textarea class="form-control" id="desc" rows="4" placeholder="Enter todo's description here..."
+                        name="desc">{{ form_desc or '' }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="due_date" class="form-label" data-icon="📅">
+                        <b>Due Date:</b>
+                    </label>
+                    <input type="datetime-local" class="form-control w-25" id="due_date" value="{{ due_date or '' }}"
+                        name="due_date">
+                    <div id="DueDateHelpBlock" class="form-text">
+                        Please enter both <b>date</b> and <b>time.</b>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-outline-dark">
+                    <i class="fas fa-paper-plane me-2"></i>Submit Todo
+                </button><br>
+                {% if error_message %}
+                <div class="alert alert-primary" role="alert">
+                    {{error_message}}
+                </div>
+                {% endif %}
+            </form>
         </div>
     </div>
 
-    <!-- Guest Mode Modal -->
-    <div class="modal fade" id="guestModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal fade" id="guestModal" tabindex="-1" aria-labelledby="guestModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Welcome to TodoMate! 🎉</h5>
+                    <h5 class="modal-title" id="guestModalLabel">
+                        <i class="fas fa-user-check me-2"></i>Welcome, Guest!
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <p>You're currently in <strong>Guest Mode</strong>. Your todos will be saved temporarily in this browser session.</p>
-                    <p>Want to save your todos permanently and access them from any device?</p>
-                    <div class="d-grid gap-2">
-                        <a href="/signin" class="btn btn-success">Sign Up (Recommended)</a>
-                        <a href="/login" class="btn btn-outline-success">Login</a>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continue as Guest</button>
-                    </div>
+                <div class="modal-body text-center">
+                    <p>We recommend you to sign up or log in to store your todos. This way, your tasks will be saved and
+                        available the next time you visit!</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <a href="/login" class="btn btn-success">
+                        <i class="fas fa-sign-in-alt me-1"></i>Log In
+                    </a>
+                    <a href="/signin" class="btn btn-success">
+                        <i class="fas fa-user-plus me-1"></i>Sign Up
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous">
+        </script>
     <script>
-        // Theme Toggle Functionality
-        const themeToggle = document.getElementById('themeToggle');
-        const htmlElement = document.documentElement;
-        const themeIcon = themeToggle.querySelector('i');
-
-        // Load saved theme
-        const savedTheme = localStorage.getItem('todomate-theme') || 'dark';
-        htmlElement.setAttribute('data-theme', savedTheme);
-        updateThemeIcon(savedTheme);
-
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = htmlElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
-            htmlElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('todomate-theme', newTheme);
-            updateThemeIcon(newTheme);
-        });
-
-        function updateThemeIcon(theme) {
-            if (theme === 'dark') {
-                themeIcon.className = 'fas fa-moon';
-            } else {
-                themeIcon.className = 'fas fa-sun';
-            }
-        }
-
-        // Guest Modal
         $(document).ready(function () {
+            // Enhanced form navigation
+            $('form').on('keydown', 'input, textarea', function (e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    var inputs = $(this).closest('form').find('input:not([type=hidden]), textarea');
+                    var idx = inputs.index(this);
+                    if (idx >= 0 && idx + 1 < inputs.length) {
+                        inputs.eq(idx + 1).focus();
+                    }
+                }
+            });
+
+            // Enhanced focus effects
+            $('.form-control').on('focus', function () {
+                $(this).parent().addClass('focused');
+                $(this).addClass('shadow-glow');
+            }).on('blur', function () {
+                $(this).parent().removeClass('focused');
+                $(this).removeClass('shadow-glow');
+            });
+
+            // Enhanced loading state for submit button
+            $('#todoForm').on('submit', function () {
+                var $btn = $(this).find('button[type="submit"]');
+                $btn.addClass('loading');
+                $btn.html('<i class="fas fa-spinner fa-spin me-2"></i>Submitting...');
+                $btn.prop('disabled', true);
+            });
+
+            // Add subtle hover effects to form groups
+            $('.mb-3').hover(
+                function () {
+                    if (!$(this).find('.form-control').is(':focus')) {
+                        $(this).find('.form-control').css({
+                            'transform': 'translateY(-2px)',
+                            'box-shadow': '0 4px 15px rgba(59, 130, 246, 0.1)'
+                        });
+                    }
+                },
+                function () {
+                    if (!$(this).find('.form-control').is(':focus')) {
+                        $(this).find('.form-control').css({
+                            'transform': 'translateY(0)',
+                            'box-shadow': 'none'
+                        });
+                    }
+                }
+            );
+
+            // Enhanced input validation visual feedback
+            $('.form-control').on('input', function () {
+                if ($(this).val().length > 0) {
+                    $(this).addClass('has-content');
+                } else {
+                    $(this).removeClass('has-content');
+                }
+            });
+
+            // Show guest modal if needed
             {% if show_guest_modal %}
             var guestModal = new bootstrap.Modal(document.getElementById('guestModal'));
             guestModal.show();
             {% endif %}
 
-            // Form enhancements
-            $('.form-control').on('focus', function () {
-                $(this).parent().addClass('focused');
-            }).on('blur', function () {
-                $(this).parent().removeClass('focused');
+            // Add ripple effect to buttons
+            $('.btn').on('click', function (e) {
+                var ripple = $('<span class="ripple"></span>');
+                $(this).append(ripple);
+
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
             });
         });
     </script>
+
 </body>
 
 </html>

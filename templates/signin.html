@@ -1,64 +1,28 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='todo-favicon.png') }}">
-    <title>Signup - TodoMate</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Signin page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
     <style>
-        :root[data-theme="dark"] {
-            --primary-gradient-start: #667eea;
-            --primary-gradient-end: #764ba2;
-            --bg-overlay-1: rgba(120, 119, 198, 0.3);
-            --bg-overlay-2: rgba(255, 119, 198, 0.3);
-            --bg-overlay-3: rgba(120, 219, 255, 0.3);
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --card-border: rgba(255, 255, 255, 0.2);
-            --text-primary: white;
-            --text-secondary: rgba(255, 255, 255, 0.9);
-            --text-muted: rgba(255, 255, 255, 0.6);
-            --input-bg: rgba(255, 255, 255, 0.1);
-            --input-border: rgba(255, 255, 255, 0.3);
-            --input-focus-bg: rgba(255, 255, 255, 0.15);
-            --input-focus-border: rgba(255, 255, 255, 0.6);
-            --navbar-bg: rgba(255, 255, 255, 0.1);
-        }
-
-        :root[data-theme="light"] {
-            --primary-gradient-start: #667eea;
-            --primary-gradient-end: #764ba2;
-            --bg-overlay-1: rgba(102, 126, 234, 0.15);
-            --bg-overlay-2: rgba(118, 75, 162, 0.15);
-            --bg-overlay-3: rgba(102, 185, 234, 0.15);
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --card-border: rgba(102, 126, 234, 0.2);
-            --text-primary: #1e293b;
-            --text-secondary: #334155;
-            --text-muted: #64748b;
-            --input-bg: rgba(255, 255, 255, 0.9);
-            --input-border: rgba(102, 126, 234, 0.3);
-            --input-focus-bg: white;
-            --input-focus-border: #667eea;
-            --navbar-bg: rgba(255, 255, 255, 0.95);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        /* Changed background to dark theme */
         body {
-            background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
+            background: #0f172a;
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow-x: hidden;
-            transition: all 0.3s ease;
+            color: #f1f5f9;
         }
 
         body::before {
@@ -68,17 +32,18 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background:
-                radial-gradient(circle at 20% 50%, var(--bg-overlay-1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, var(--bg-overlay-2) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, var(--bg-overlay-3) 0%, transparent 50%);
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
             z-index: -1;
             animation: backgroundShift 15s ease-in-out infinite;
         }
 
         @keyframes backgroundShift {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.95;
+            }
         }
 
         .floating-shapes {
@@ -92,69 +57,59 @@
         .shape {
             position: absolute;
             border-radius: 50%;
-            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            background: linear-gradient(45deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.02));
             animation: float 6s ease-in-out infinite;
         }
 
-        .shape:nth-child(1) { width: 80px; height: 80px; top: 20%; left: 10%; animation-delay: 0s; }
-        .shape:nth-child(2) { width: 120px; height: 120px; top: 60%; right: 10%; animation-delay: 2s; }
-        .shape:nth-child(3) { width: 60px; height: 60px; bottom: 20%; left: 20%; animation-delay: 4s; }
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
         }
 
         .navbar {
-            background: var(--navbar-bg) !important;
+            background: rgba(30, 41, 59, 0.95) !important;
             backdrop-filter: blur(15px);
-            border-bottom: 1px solid var(--card-border);
-            transition: all 0.3s ease;
+            border-bottom: 1px solid #334155;
         }
 
         .navbar-brand {
-            color: var(--text-primary) !important;
+            color: #f1f5f9 !important;
             font-weight: bold;
             display: flex;
             align-items: center;
             gap: .5rem;
-            transition: all 0.3s ease;
-        }
-
-        .navbar-brand:hover {
-            transform: scale(1.05);
         }
 
         .navbar-brand img {
-            transition: all 0.3s ease;
-        }
-
-        .navbar-brand:hover img {
-            transform: rotate(360deg);
-        }
-
-        .theme-toggle {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-left: 1rem;
-        }
-
-        .theme-toggle:hover {
-            transform: translateY(-2px) scale(1.1);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .theme-toggle i {
-            color: var(--text-primary);
-            font-size: 1.2rem;
+            /* filter: brightness(0) invert(1); */
         }
 
         .container {
@@ -163,64 +118,76 @@
             padding: 0 1rem;
         }
 
+        /* Updated card styling for dark theme */
         .signin-card {
-            background: var(--card-bg);
+            background: #1e293b;
             backdrop-filter: blur(15px);
             border-radius: 20px;
             padding: 2.5rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--card-border);
-            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid #334155;
+            animation: glow 4s ease-in-out infinite;
         }
 
-        .signin-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+            }
         }
 
         .signin-card h3 {
-            color: var(--text-primary);
+            color: #f1f5f9;
             text-align: center;
             margin-bottom: 2rem;
             font-weight: 600;
             font-size: 2rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
         }
 
         .signin-card h3::before {
             content: '📝';
-            margin-right: 0.5rem;
+            position: absolute;
+            left: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
         }
 
         .form-label {
-            color: var(--text-secondary);
+            color: #f1f5f9;
             font-weight: 600;
             margin-bottom: .5rem;
         }
 
+        /* Updated form control styling for dark theme */
         .form-control {
-            background: var(--input-bg);
-            border: 1px solid var(--input-border);
+            background: rgba(51, 65, 85, 0.5);
+            border: 1px solid #334155;
             border-radius: 12px;
-            color: var(--text-primary);
+            color: #f1f5f9;
             padding: .75rem 1rem;
             transition: all .3s ease;
         }
 
         .form-control::placeholder {
-            color: var(--text-muted);
+            color: #cbd5e1;
         }
 
         .form-control:focus {
-            background: var(--input-focus-bg);
-            border-color: var(--input-focus-border);
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+            background: rgba(59, 130, 246, 0.1);
+            border-color: #60a5fa;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
             transform: translateY(-2px);
-            color: var(--text-primary);
+            color: #f1f5f9;
         }
 
+        /* Updated button styling for dark theme */
         .btn-signin {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
             border: none;
             border-radius: 12px;
             color: white;
@@ -229,57 +196,53 @@
             font-size: 1.1rem;
             width: 100%;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-signin::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-signin:hover::before {
+            left: 100%;
         }
 
         .btn-signin:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            background: linear-gradient(135deg, #764ba2, #667eea);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
         }
 
+        .btn-signin:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-signin.loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* Updated alert styling for dark theme */
         .alert {
-            background: rgba(255, 193, 7, 0.15);
-            border: 1px solid rgba(255, 193, 7, 0.3);
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
             border-radius: 12px;
-            color: var(--text-primary);
+            color: #cbd5e1;
             backdrop-filter: blur(10px);
             margin-top: 1rem;
         }
 
-        .modal-content {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            border: 1px solid var(--card-border);
-        }
-
-        .modal-header {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 20px 20px 0 0;
-            color: white;
-        }
-
-        .modal-body {
-            color: var(--text-primary);
-        }
-
         #pop {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                margin: 1rem auto;
-            }
-
-            .signin-card {
-                padding: 2rem 1.5rem;
-            }
-
-            .theme-toggle {
-                margin-left: 0.5rem;
-            }
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
         }
     </style>
 </head>
@@ -291,22 +254,21 @@
         <div class="shape"></div>
     </div>
 
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
-                <img src="{{ url_for('static', filename='todo-removebg-preview.png') }}" alt="Logo" width="32" height="31">
+                <img src="{{ url_for('static', filename='todo-removebg-preview.png') }}" alt="Logo" width="32"
+                    height="31" class="d-inline-block align-text-top">
                 <b>TodoMate</b>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
+                <ul class="navbar-nav">
                     <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
                 </ul>
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                    <i class="fas fa-moon"></i>
-                </button>
             </div>
         </div>
     </nav>
@@ -317,15 +279,18 @@
             <form action="/signin" method="POST" id="signinForm">
                 <div class="mb-3">
                     <label for="Uname" class="form-label"><b>User Name:</b></label>
-                    <input type="text" class="form-control" id="Uname" placeholder="Enter user name here..." name="Uname">
+                    <input type="text" class="form-control" id="Uname" placeholder="Enter user name here..."
+                        name="Uname">
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label"><b>Email:</b></label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter your email here..." name="email">
+                    <input type="email" class="form-control" id="email" placeholder="Enter your email here..."
+                        name="email">
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label"><b>Password:</b></label>
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password...">
+                    <input type="password" class="form-control" id="password" name="password"
+                        placeholder="Enter your password...">
                 </div>
                 <button type="submit" class="btn-signin">Sign up</button>
             </form>
@@ -334,33 +299,34 @@
             <div class="alert" role="alert">{{ error_message }}</div>
             {% endif %}
         </div>
-
         <!-- OTP Verification Modal -->
         <div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content" style="border-radius: 15px;" id="pop">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="otpModalLabel">Verify Your Email</h5>
+                <div class="modal-content" style="border-radius: 15px; background: #1e293b; border: 1px solid #334155;" id="pop">
+                    <div class="modal-header" style="border-bottom: 1px solid #334155;">
+                        <h5 class="modal-title" id="otpModalLabel" style="color: #f1f5f9;">Verify Your Email</h5>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" style="color: #f1f5f9;">
                         <p>An OTP has been sent to your email. Please enter it below:</p>
                         <form action="/verify_otp" method="POST" id="otpForm">
                             <div class="mb-3">
-                                <input type="text" class="form-control" name="otp" placeholder="Enter 6-digit OTP" maxlength="6" required>
+                                <input type="text" class="form-control" name="otp" placeholder="Enter 6-digit OTP"
+                                    maxlength="6" required>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100">Verify OTP</button>
+                            <button type="submit" class="btn btn-primary w-100" style="background: linear-gradient(135deg, #3b82f6, #1e40af); border: none;">Verify OTP</button>
                         </form>
                         <p class="mt-3 text-center">
                             Didn't receive OTP?
                         <form action="/resend_otp" method="post" id="resendOtpForm" class="d-inline">
-                            <button type="submit" class="btn btn-link p-0 m-0 border-0" id="resendLink" style="text-decoration: none; color: white;" disabled>
+                            <button type="submit" class="btn btn-link p-0 m-0 border-0" id="resendLink"
+                                style="text-decoration: none; color: #60a5fa;" disabled>
                                 Resend OTP
                             </button>
                         </form>
                         </p>
                     </div>
                     {% if error_message %}
-                    <div class="alert alert-danger" role="alert">
+                    <div class="alert alert-danger" role="alert" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; margin: 1rem;">
                         {{error_message}}
                     </div>
                     {% endif %}
@@ -369,29 +335,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const htmlElement = document.documentElement;
-        const themeIcon = themeToggle.querySelector('i');
-
-        const savedTheme = localStorage.getItem('todomate-theme') || 'dark';
-        htmlElement.setAttribute('data-theme', savedTheme);
-        updateThemeIcon(savedTheme);
-
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = htmlElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            htmlElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('todomate-theme', newTheme);
-            updateThemeIcon(newTheme);
-        });
-
-        function updateThemeIcon(theme) {
-            themeIcon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
-        }
-
         $(document).ready(function () {
             $('form').on('keydown', 'input', function (e) {
                 if (e.key === 'Enter') {
@@ -405,17 +349,17 @@
                     }
                 }
             });
-
+            // Add loading animation to button on form submit
             $('#signinForm').on('submit', function () {
-                $('.btn-signin').addClass('loading').text('Signing up...');
+                $('.btn-signin').addClass('loading').text('Logging in...');
             });
-
+            // Enhanced focus animations
             $('.form-control').on('focus', function () {
                 $(this).parent().addClass('focused');
             }).on('blur', function () {
                 $(this).parent().removeClass('focused');
             });
-
+            // Add subtle hover effects to form groups
             $('.mb-3').hover(
                 function () {
                     $(this).find('.form-control').css('transform', 'translateY(-1px)');
@@ -428,13 +372,16 @@
             );
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // Show OTP modal if backend signals it
             {% if show_otp_modal %}
             var otpModal = new bootstrap.Modal(document.getElementById('otpModal'));
             otpModal.show();
             {% endif %}
 
+            // Countdown timer for Resend OTP button
             const resendLink = document.getElementById("resendLink");
             const countdownSpan = document.createElement('span');
             countdownSpan.classList.add('ms-2', 'text-warning');
@@ -449,7 +396,7 @@
                     clearInterval(timer);
                     resendLink.disabled = false;
                     countdownSpan.textContent = '';
-                    resendLink.style.color = 'yellow';
+                    resendLink.style.color = '#60a5fa';
                 }
             }, 1000);
         });
