@@ -1,15 +1,52 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='todo-favicon.png') }}">
-    <title>Edit Todo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <title>Edit Todo - TodoMate</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
     <style>
+        :root[data-theme="dark"] {
+            --primary-gradient-start: #667eea;
+            --primary-gradient-end: #764ba2;
+            --bg-overlay-1: rgba(120, 119, 198, 0.3);
+            --bg-overlay-2: rgba(255, 119, 198, 0.3);
+            --bg-overlay-3: rgba(120, 219, 255, 0.3);
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-border: rgba(255, 255, 255, 0.2);
+            --text-primary: white;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --input-border: rgba(255, 255, 255, 0.3);
+            --input-focus-bg: rgba(255, 255, 255, 0.15);
+            --input-focus-border: rgba(255, 255, 255, 0.6);
+            --navbar-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        :root[data-theme="light"] {
+            --primary-gradient-start: #667eea;
+            --primary-gradient-end: #764ba2;
+            --bg-overlay-1: rgba(102, 126, 234, 0.15);
+            --bg-overlay-2: rgba(118, 75, 162, 0.15);
+            --bg-overlay-3: rgba(102, 185, 234, 0.15);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(102, 126, 234, 0.2);
+            --text-primary: #1e293b;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --input-bg: rgba(255, 255, 255, 0.9);
+            --input-border: rgba(102, 126, 234, 0.3);
+            --input-focus-bg: white;
+            --input-focus-border: #667eea;
+            --navbar-bg: rgba(255, 255, 255, 0.95);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -17,11 +54,12 @@
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             position: relative;
             overflow-x: hidden;
+            transition: all 0.3s ease;
         }
 
         body::before {
@@ -32,47 +70,16 @@
             width: 100%;
             height: 100%;
             background:
-                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, var(--bg-overlay-1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, var(--bg-overlay-2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, var(--bg-overlay-3) 0%, transparent 50%);
             z-index: -1;
             animation: backgroundShift 15s ease-in-out infinite;
         }
 
         @keyframes backgroundShift {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.8;
-            }
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0px) rotate(0deg);
-            }
-
-            50% {
-                transform: translateY(-20px) rotate(5deg);
-            }
-        }
-
-        @keyframes glow {
-
-            0%,
-            100% {
-                box-shadow: 0 0 20px rgba(120, 119, 198, 0.4);
-            }
-
-            50% {
-                box-shadow: 0 0 40px rgba(120, 119, 198, 0.6);
-            }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
 
         .floating-shapes {
@@ -90,42 +97,28 @@
             animation: float 6s ease-in-out infinite;
         }
 
-        .shape:nth-child(1) {
-            width: 80px;
-            height: 80px;
-            top: 20%;
-            left: 10%;
-            animation-delay: 0s;
-        }
+        .shape:nth-child(1) { width: 80px; height: 80px; top: 20%; left: 10%; animation-delay: 0s; }
+        .shape:nth-child(2) { width: 120px; height: 120px; top: 60%; right: 10%; animation-delay: 2s; }
+        .shape:nth-child(3) { width: 60px; height: 60px; bottom: 20%; left: 20%; animation-delay: 4s; }
 
-        .shape:nth-child(2) {
-            width: 120px;
-            height: 120px;
-            top: 60%;
-            right: 10%;
-            animation-delay: 2s;
-        }
-
-        .shape:nth-child(3) {
-            width: 60px;
-            height: 60px;
-            bottom: 20%;
-            left: 20%;
-            animation-delay: 4s;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
         }
 
         .navbar {
-            background: rgba(255, 255, 255, 0.1) !important;
+            background: var(--navbar-bg) !important;
             backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid var(--card-border);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
+            transition: all 0.3s ease;
         }
 
         .navbar-brand {
-            color: white !important;
+            color: var(--text-primary) !important;
             font-weight: bold;
             display: flex;
             align-items: center;
@@ -135,11 +128,9 @@
 
         .navbar-brand:hover {
             transform: scale(1.05);
-            color: #f8f9fa !important;
         }
 
         .navbar-brand img {
-            /* filter: brightness(0) invert(1); */
             transition: all 0.3s ease;
         }
 
@@ -148,31 +139,38 @@
         }
 
         .nav-link {
-            color: rgba(255, 255, 255, 0.9) !important;
+            color: var(--text-secondary) !important;
             font-weight: 500;
             transition: all 0.3s ease;
             position: relative;
         }
 
         .nav-link:hover {
-            color: white !important;
+            color: var(--text-primary) !important;
             transform: translateY(-2px);
         }
 
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background: white;
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
             transition: all 0.3s ease;
-            transform: translateX(-50%);
+            margin-left: 1rem;
         }
 
-        .nav-link:hover::after {
-            width: 100%;
+        .theme-toggle:hover {
+            transform: translateY(-2px) scale(1.1);
+        }
+
+        .theme-toggle i {
+            color: var(--text-primary);
+            font-size: 1.2rem;
         }
 
         .btn {
@@ -205,7 +203,6 @@
             border-color: #28a745;
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
         }
 
         .container {
@@ -215,46 +212,36 @@
         }
 
         .edit-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
             backdrop-filter: blur(15px);
             border-radius: 20px;
             padding: 2.5rem;
-            box-shadow:
-                0 8px 32px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            animation: glow 4s ease-in-out infinite;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 var(--card-border);
+            border: 1px solid var(--card-border);
             transition: all 0.3s ease;
         }
 
         .edit-card:hover {
             transform: translateY(-5px);
-            box-shadow:
-                0 15px 40px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
 
         .edit-card h3 {
-            color: white;
+            color: var(--text-primary);
             text-align: center;
             margin-bottom: 2rem;
             font-weight: 600;
             font-size: 2rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            position: relative;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .edit-card h3::before {
             content: '✏️';
-            position: absolute;
-            left: -50px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.5rem;
+            margin-right: 0.5rem;
         }
 
         .form-label {
-            color: rgba(255, 255, 255, 0.9);
+            color: var(--text-secondary);
             font-weight: 600;
             margin-bottom: 0.5rem;
             display: flex;
@@ -262,27 +249,15 @@
             gap: 0.5rem;
         }
 
-        .form-label::before {
-            font-size: 1.1rem;
-        }
-
-        .form-label[for="title"]::before {
-            content: '📝';
-        }
-
-        .form-label[for="desc"]::before {
-            content: '📄';
-        }
-
-        .form-label[for="due_date"]::before {
-            content: '⏰';
-        }
+        .form-label[for="title"]::before { content: '📝'; }
+        .form-label[for="desc"]::before { content: '📄'; }
+        .form-label[for="due_date"]::before { content: '⏰'; }
 
         .form-control {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
             border-radius: 12px;
-            color: white;
+            color: var(--text-primary);
             padding: 0.75rem 1rem;
             font-size: 1rem;
             transition: all 0.3s ease;
@@ -290,17 +265,15 @@
         }
 
         .form-control:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.6);
-            box-shadow:
-                0 0 0 0.2rem rgba(255, 255, 255, 0.25),
-                0 0 20px rgba(120, 119, 198, 0.3);
-            color: white;
+            background: var(--input-focus-bg);
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            color: var(--text-primary);
             transform: translateY(-2px);
         }
 
         .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--text-muted);
         }
 
         textarea.form-control {
@@ -318,23 +291,6 @@
             font-size: 1.1rem;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-edit::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn-edit:hover::before {
-            left: 100%;
         }
 
         .btn-edit:hover {
@@ -343,104 +299,17 @@
             background: linear-gradient(135deg, #764ba2, #667eea);
         }
 
-        .btn-edit:active {
-            transform: translateY(-1px);
-        }
-
-        .alert {
-            background: rgba(13, 202, 240, 0.15);
-            border: 1px solid rgba(13, 202, 240, 0.3);
-            border-radius: 12px;
-            color: #b6effb;
-            backdrop-filter: blur(10px);
-            margin-top: 1rem;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .form-text {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-        }
-
-        .mb-3 {
-            margin-bottom: 1.5rem !important;
-        }
-
-        /* Loading animation for button */
-        .btn-edit.loading {
-            pointer-events: none;
-            position: relative;
-        }
-
-        .btn-edit.loading::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            top: 50%;
-            left: 50%;
-            margin-left: -10px;
-            margin-top: -10px;
-            border: 2px solid transparent;
-            border-top: 2px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Responsive design */
         @media (max-width: 768px) {
             .container {
                 margin: 1rem auto;
-                padding: 0 1rem;
             }
 
             .edit-card {
                 padding: 2rem 1.5rem;
-                margin: 0 0.5rem;
             }
 
-            .edit-card h3::before {
-                left: -35px;
-                font-size: 1.2rem;
-            }
-
-            .form-control.w-25 {
-                width: 100% !important;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .edit-card h3 {
-                font-size: 1.5rem;
-            }
-
-            .edit-card h3::before {
-                position: relative;
-                left: 0;
-                margin-right: 0.5rem;
+            .theme-toggle {
+                margin-left: 0.5rem;
             }
         }
     </style>
@@ -453,19 +322,17 @@
         <div class="shape"></div>
     </div>
 
-    <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
-                <img src="{{ url_for('static', filename='todo-removebg-preview.png') }}" alt="Logo" width="32"
-                    height="31" class="d-inline-block align-text-top">
+                <img src="{{ url_for('static', filename='todo-removebg-preview.png') }}" alt="Logo" width="32" height="31">
                 <b>TodoMate</b>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/">Add Todo</a>
                     </li>
@@ -473,17 +340,18 @@
                         <a class="nav-link active" aria-current="page" href="/view">View Todo</a>
                     </li>
                 </ul>
+                <div class="d-flex align-items-center">
+                    {% if authflag %}
+                    <span style="color: var(--text-primary); font-weight: 600; margin-right: 1rem;">Welcome {{ username }}</span>
+                    <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+                    {% else %}
+                    <a href="/login" class="btn btn-outline-success">Login</a>
+                    {% endif %}
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
             </div>
-            {% if authflag %}
-            <div class="d-flex align-items-center">
-                <span style="color: white; font-weight: 600; margin-right: 1rem;">Welcome {{ username }}</span>
-                <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
-            </div>
-            {% else %}
-            <div class="d-flex">
-                <a href="/login" class="btn btn-outline-success">Login</a>
-            </div>
-            {% endif %}
         </div>
     </nav>
 
@@ -493,79 +361,54 @@
             <form action="{{ url_for('edit_todo', id=todo.id) }}" method="POST" id="editForm">
                 <div class="mb-3">
                     <label for="title" class="form-label"><b>Todo title:</b></label>
-                    <input type="text" class="form-control" id="title" value="{{ todo.title or '' }}"
-                        placeholder="Enter todo's title here..." name="title">
+                    <input type="text" class="form-control" id="title" value="{{ todo.title or '' }}" placeholder="Enter todo's title here..." name="title">
                 </div>
                 <div class="mb-3">
                     <label for="desc" class="form-label"><b>Todo Description:</b></label>
-                    <textarea class="form-control" id="desc" rows="3" placeholder="Enter todo's description here..."
-                        name="desc">{{ todo.desc or '' }}</textarea>
+                    <textarea class="form-control" id="desc" placeholder="Enter todo's description..." name="desc" rows="4">{{ todo.desc or '' }}</textarea>
                 </div>
                 <div class="mb-3">
                     <label for="due_date" class="form-label"><b>Due Date:</b></label>
-                    <input type="datetime-local" class="form-control w-25" id="due_date"
-                        value="{{ todo.due_date|datetime_local_string }}" name="due_date">
-                    <div id="DueDateHelpBlock" class="form-text">
-                        Please enter both <b>date</b> and <b>time.</b>
-                    </div>
+                    <input type="datetime-local" class="form-control" id="due_date" name="due_date" value="{{ todo.due_date|datetime_local_string }}">
                 </div>
-                <button type="submit" class="btn btn-edit">Edit</button>
-
-                {% if error_message %}
-                <div class="alert alert-primary" role="alert">
-                    {{error_message}}
-                </div>
-                {% endif %}
+                <button type="submit" class="btn-edit w-100">Update Todo</button>
             </form>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        $(document).ready(function () {
-            // Enhanced form navigation
-            $('form').on('keydown', 'input', function (e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    var inputs = $(this).closest('form').find('input:not([type=hidden])');
-                    var idx = inputs.index(this);
-                    if (idx >= 0 && idx + 1 < inputs.length) {
-                        inputs.eq(idx + 1).focus();
-                    } else {
-                        // If it's the last input, submit the form
-                        $(this).closest('form').find('button[type=submit]').click();
-                    }
-                }
-            });
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+        const themeIcon = themeToggle.querySelector('i');
 
-            // Add loading animation to button on form submit
-            $('#editForm').on('submit', function () {
-                $('.btn-edit').addClass('loading').text('Updating...');
-            });
+        const savedTheme = localStorage.getItem('todomate-theme') || 'dark';
+        htmlElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
 
-            // Enhanced focus animations
-            $('.form-control').on('focus', function () {
-                $(this).parent().addClass('focused');
-            }).on('blur', function () {
-                $(this).parent().removeClass('focused');
-            });
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('todomate-theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
 
-            // Add subtle hover effects to form groups
-            $('.mb-3').hover(
-                function () {
-                    $(this).find('.form-control').css('transform', 'translateY(-1px)');
-                },
-                function () {
-                    if (!$(this).find('.form-control').is(':focus')) {
-                        $(this).find('.form-control').css('transform', 'translateY(0)');
-                    }
-                }
-            );
+        function updateThemeIcon(theme) {
+            themeIcon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        $('#editForm').on('submit', function () {
+            $('.btn-edit').addClass('loading').text('Updating...');
+        });
+
+        $('.form-control').on('focus', function () {
+            $(this).parent().addClass('focused');
+        }).on('blur', function () {
+            $(this).parent().removeClass('focused');
         });
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
-        crossorigin="anonymous"></script>
 </body>
 
 </html>

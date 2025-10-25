@@ -1,15 +1,52 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='todo-removebg-preview.png') }}">
-    <title>Login page</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <title>Login - TodoMate</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
     <style>
+        :root[data-theme="dark"] {
+            --primary-gradient-start: #667eea;
+            --primary-gradient-end: #764ba2;
+            --bg-overlay-1: rgba(120, 119, 198, 0.3);
+            --bg-overlay-2: rgba(255, 119, 198, 0.3);
+            --bg-overlay-3: rgba(120, 219, 255, 0.3);
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-border: rgba(255, 255, 255, 0.2);
+            --text-primary: white;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --input-bg: rgba(255, 255, 255, 0.1);
+            --input-border: rgba(255, 255, 255, 0.3);
+            --input-focus-bg: rgba(255, 255, 255, 0.15);
+            --input-focus-border: rgba(255, 255, 255, 0.6);
+            --navbar-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        :root[data-theme="light"] {
+            --primary-gradient-start: #667eea;
+            --primary-gradient-end: #764ba2;
+            --bg-overlay-1: rgba(102, 126, 234, 0.15);
+            --bg-overlay-2: rgba(118, 75, 162, 0.15);
+            --bg-overlay-3: rgba(102, 185, 234, 0.15);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(102, 126, 234, 0.2);
+            --text-primary: #1e293b;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --input-bg: rgba(255, 255, 255, 0.9);
+            --input-border: rgba(102, 126, 234, 0.3);
+            --input-focus-bg: white;
+            --input-focus-border: #667eea;
+            --navbar-bg: rgba(255, 255, 255, 0.95);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -17,11 +54,12 @@
         }
 
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             position: relative;
             overflow-x: hidden;
+            transition: all 0.3s ease;
         }
 
         body::before {
@@ -32,47 +70,16 @@
             width: 100%;
             height: 100%;
             background:
-                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, var(--bg-overlay-1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, var(--bg-overlay-2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, var(--bg-overlay-3) 0%, transparent 50%);
             z-index: -1;
             animation: backgroundShift 15s ease-in-out infinite;
         }
 
         @keyframes backgroundShift {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.8;
-            }
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0px) rotate(0deg);
-            }
-
-            50% {
-                transform: translateY(-20px) rotate(5deg);
-            }
-        }
-
-        @keyframes glow {
-
-            0%,
-            100% {
-                box-shadow: 0 0 20px rgba(120, 119, 198, 0.4);
-            }
-
-            50% {
-                box-shadow: 0 0 40px rgba(120, 119, 198, 0.6);
-            }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
 
         .floating-shapes {
@@ -90,42 +97,28 @@
             animation: float 6s ease-in-out infinite;
         }
 
-        .shape:nth-child(1) {
-            width: 80px;
-            height: 80px;
-            top: 20%;
-            left: 10%;
-            animation-delay: 0s;
-        }
+        .shape:nth-child(1) { width: 80px; height: 80px; top: 20%; left: 10%; animation-delay: 0s; }
+        .shape:nth-child(2) { width: 120px; height: 120px; top: 60%; right: 10%; animation-delay: 2s; }
+        .shape:nth-child(3) { width: 60px; height: 60px; bottom: 20%; left: 20%; animation-delay: 4s; }
 
-        .shape:nth-child(2) {
-            width: 120px;
-            height: 120px;
-            top: 60%;
-            right: 10%;
-            animation-delay: 2s;
-        }
-
-        .shape:nth-child(3) {
-            width: 60px;
-            height: 60px;
-            bottom: 20%;
-            left: 20%;
-            animation-delay: 4s;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
         }
 
         .navbar {
-            background: rgba(255, 255, 255, 0.1) !important;
+            background: var(--navbar-bg) !important;
             backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid var(--card-border);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
+            transition: all 0.3s ease;
         }
 
         .navbar-brand {
-            color: white !important;
+            color: var(--text-primary) !important;
             font-weight: bold;
             display: flex;
             align-items: center;
@@ -135,11 +128,9 @@
 
         .navbar-brand:hover {
             transform: scale(1.05);
-            color: #f8f9fa !important;
         }
 
         .navbar-brand img {
-            /* filter: brightness(0) invert(1); */
             transition: all 0.3s ease;
         }
 
@@ -148,31 +139,39 @@
         }
 
         .nav-link {
-            color: rgba(255, 255, 255, 0.9) !important;
+            color: var(--text-secondary) !important;
             font-weight: 500;
             transition: all 0.3s ease;
             position: relative;
         }
 
         .nav-link:hover {
-            color: white !important;
+            color: var(--text-primary) !important;
             transform: translateY(-2px);
         }
 
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background: white;
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
             transition: all 0.3s ease;
-            transform: translateX(-50%);
+            margin-left: 1rem;
         }
 
-        .nav-link:hover::after {
-            width: 100%;
+        .theme-toggle:hover {
+            transform: translateY(-2px) scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-toggle i {
+            color: var(--text-primary);
+            font-size: 1.2rem;
         }
 
         .container {
@@ -182,46 +181,36 @@
         }
 
         .login-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
             backdrop-filter: blur(15px);
             border-radius: 20px;
             padding: 2.5rem;
-            box-shadow:
-                0 8px 32px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            animation: glow 4s ease-in-out infinite;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 var(--card-border);
+            border: 1px solid var(--card-border);
             transition: all 0.3s ease;
         }
 
         .login-card:hover {
             transform: translateY(-5px);
-            box-shadow:
-                0 15px 40px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
 
         .login-card h3 {
-            color: white;
+            color: var(--text-primary);
             text-align: center;
             margin-bottom: 2rem;
             font-weight: 600;
             font-size: 2rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            position: relative;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .login-card h3::before {
             content: '🔐';
-            position: absolute;
-            left: -40px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.5rem;
+            margin-right: 0.5rem;
         }
 
         .form-label {
-            color: rgba(255, 255, 255, 0.9);
+            color: var(--text-secondary);
             font-weight: 600;
             margin-bottom: 0.5rem;
             display: flex;
@@ -229,35 +218,15 @@
             gap: 0.5rem;
         }
 
-        .form-label::before {
-            font-size: 1.1rem;
-        }
-
-        .form-label[for="Uname"]::before {
-            content: '👤';
-        }
-
-        .form-label[for="email"]::before {
-            content: '📧';
-        }
-
-        .form-label[for="password"]::before {
-            content: '🔒';
-        }
-
-        .form-label[for="Uname_fp"]::before {
-            content: '👤';
-        }
-
-        .form-label[for="email_fp"]::before {
-            content: '📧';
-        }
+        .form-label[for="Uname"]::before { content: '👤'; }
+        .form-label[for="email"]::before { content: '📧'; }
+        .form-label[for="password"]::before { content: '🔒'; }
 
         .form-control {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
             border-radius: 12px;
-            color: white;
+            color: var(--text-primary);
             padding: 0.75rem 1rem;
             font-size: 1rem;
             transition: all 0.3s ease;
@@ -265,17 +234,15 @@
         }
 
         .form-control:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.6);
-            box-shadow:
-                0 0 0 0.2rem rgba(255, 255, 255, 0.25),
-                0 0 20px rgba(120, 119, 198, 0.3);
-            color: white;
+            background: var(--input-focus-bg);
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            color: var(--text-primary);
             transform: translateY(-2px);
         }
 
         .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--text-muted);
         }
 
         .btn-login {
@@ -289,23 +256,6 @@
             width: 100%;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-login::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn-login:hover::before {
-            left: 100%;
         }
 
         .btn-login:hover {
@@ -314,33 +264,19 @@
             background: linear-gradient(135deg, #764ba2, #667eea);
         }
 
-        .btn-login:active {
-            transform: translateY(-1px);
-        }
-
         .signup-section {
             text-align: center;
             margin-top: 2rem;
             padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(102, 126, 234, 0.1);
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--card-border);
         }
 
         .signup-section h4 {
-            color: rgba(255, 255, 255, 0.9);
+            color: var(--text-secondary);
             font-size: 1.1rem;
             margin: 0;
-        }
-
-        .signup-section ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .signup-section li {
-            margin: 0.5rem 0;
         }
 
         .signup-section a {
@@ -348,268 +284,50 @@
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .signup-section a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -2px;
-            left: 0;
-            background: #ffeb3b;
-            transition: width 0.3s ease;
-        }
-
-        .signup-section a:hover::after {
-            width: 100%;
         }
 
         .signup-section a:hover {
             color: #fff176;
-            transform: scale(1.05);
         }
 
         .alert {
             background: rgba(255, 193, 7, 0.15);
             border: 1px solid rgba(255, 193, 7, 0.3);
             border-radius: 12px;
-            color: #fff3cd;
+            color: var(--text-primary);
             backdrop-filter: blur(10px);
             margin-top: 1rem;
-            animation: slideIn 0.5s ease-out;
         }
 
-        .alert-success {
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: #d1fae5;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .alert a {
-            color: #ffeb3b;
-            font-weight: 600;
-        }
-
-        .mb-3 {
-            margin-bottom: 1.5rem !important;
-        }
-
-        /* Loading animation for button */
-        .btn-login.loading {
-            pointer-events: none;
-            position: relative;
-        }
-
-        .btn-login.loading::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            top: 50%;
-            left: 50%;
-            margin-left: -10px;
-            margin-top: -10px;
-            border: 2px solid transparent;
-            border-top: 2px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Modal Styling */
         .modal-content {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--card-bg);
             backdrop-filter: blur(20px);
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
         }
 
         .modal-header {
             background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 20px 20px 0 0;
-            border-bottom: none;
             color: white;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .modal-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.3));
-        }
-
-        .modal-title {
-            font-weight: 700;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn-close {
-            filter: brightness(0) invert(1);
-            opacity: 0.8;
-            transition: all 0.3s ease;
-        }
-
-        .btn-close:hover {
-            opacity: 1;
-            transform: scale(1.1);
         }
 
         .modal-body {
-            padding: 2rem;
+            color: var(--text-primary);
         }
 
-        .modal .form-control {
-            background: rgba(102, 126, 234, 0.1);
-            border: 2px solid rgba(102, 126, 234, 0.2);
-            color: #334155;
-        }
-
-        .modal .form-control:focus {
-            background: rgba(102, 126, 234, 0.15);
-            border-color: #667eea;
-            color: #334155;
-            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.15);
-        }
-
-        .modal .form-control::placeholder {
-            color: #64748b;
-        }
-
-        .modal .form-label {
-            color: #334155;
-            font-weight: 600;
-        }
-
-        .modal .form-label::before {
-            color: #667eea;
-        }
-
-        .modal .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            padding: 0.75rem 1.5rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .modal .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .modal .btn-primary:hover::before {
-            left: 100%;
-        }
-
-        .modal .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .form-text {
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 8px;
-            padding: 0.75rem;
-            border-left: 3px solid #667eea;
-            color: #334155;
-            font-style: italic;
-        }
-
-        .form-text p {
-            margin: 0;
-        }
-
-        /* Responsive design */
         @media (max-width: 768px) {
             .container {
                 margin: 1rem auto;
-                padding: 0 1rem;
             }
 
             .login-card {
                 padding: 2rem 1.5rem;
-                margin: 0 0.5rem;
             }
 
-            .login-card h3::before {
-                left: -30px;
-                font-size: 1.2rem;
+            .theme-toggle {
+                margin-left: 0.5rem;
             }
-
-            .modal-body {
-                padding: 1.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .login-card h3 {
-                font-size: 1.5rem;
-            }
-
-            .login-card h3::before {
-                position: relative;
-                left: 0;
-                margin-right: 0.5rem;
-            }
-        }
-
-        .btn-send-otp.loading {
-            pointer-events: none;
-            position: relative;
-            opacity: 0.8;
-        }
-
-        .btn-send-otp.loading::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            top: 50%;
-            left: 50%;
-            margin-left: -10px;
-            margin-top: -10px;
-            border: 2px solid transparent;
-            border-top: 2px solid white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
         }
     </style>
 </head>
@@ -621,23 +339,22 @@
         <div class="shape"></div>
     </div>
 
-    <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
-                <img src="{{ url_for('static', filename='todo-removebg-preview.png') }}" alt="Logo" width="32"
-                    height="31" class="d-inline-block align-text-top">
+                <img src="{{ url_for('static', filename='todo-removebg-preview.png') }}" alt="Logo" width="32" height="31">
                 <b>TodoMate</b>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
-                    </li>
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
                 </ul>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
             </div>
         </div>
     </nav>
@@ -648,243 +365,179 @@
             <form action="/login" method="POST" id="loginForm">
                 <div class="mb-3">
                     <label for="Uname" class="form-label"><b>User Name:</b></label>
-                    <input type="text" class="form-control" id="Uname" placeholder="Enter user name here..."
-                        name="Uname">
+                    <input type="text" class="form-control" id="Uname" placeholder="Enter your username..." name="Uname" required>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label"><b>Email:</b></label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter your email here..."
-                        name="email">
+                    <input type="email" class="form-control" id="email" placeholder="Enter your email..." name="email" required>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label"><b>Password:</b></label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter your password..."
-                        name="password">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password..." required>
                 </div>
-                <button type="submit" class="btn btn-login">Log in</button>
+                <button type="submit" class="btn-login">Login</button>
             </form>
 
-            <div class="signup-section">
-                <h4>
-                    <ul>
-                        <li>Don't have an account? <a href="/signin">Sign up</a></li>
-                        <li><a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">🔑 Forgot
-                                Password?</a></li>
-                    </ul>
-                </h4>
-            </div>
-
-            {% if authflag is defined and authflag == False %}
-            <div class="alert alert-warning" role="alert">
-                You have entered wrong login credentials, please re-enter or <a href="/signin">sign up</a> with another
-                account
-            </div>
-            {% endif %}
             {% if message %}
-            <div class="alert alert-success" role="alert">
-                {{ message }}
-            </div>
+            <div class="alert" role="alert">{{ message }}</div>
             {% endif %}
+
+            <div class="signup-section">
+                <h4><b>Don't have an account?</b></h4>
+                <ul style="list-style: none; padding: 0; margin-top: 1rem;">
+                    <li><a href="/signin">Signup Here</a></li>
+                    <li style="margin-top: 0.5rem;"><a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Forgot Password?</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 
     <!-- Forgot Password Modal -->
-    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="forgotPasswordModalLabel">🔑 Forgot Password</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title">Reset Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter: brightness(0) invert(1);"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/forgot_password" method="POST" id="forgotPasswordForm">
+                    <form id="forgotPasswordForm">
                         <div class="mb-3">
-                            <label for="Uname_fp" class="form-label"><b>User Name:</b></label>
-                            <input type="text" class="form-control" id="Uname_fp" name="Uname"
-                                placeholder="Enter your username...">
+                            <label for="Uname_fp" class="form-label"><b>Username:</b></label>
+                            <input type="text" class="form-control" id="Uname_fp" name="Uname" required>
                         </div>
                         <div class="mb-3">
                             <label for="email_fp" class="form-label"><b>Email:</b></label>
-                            <input type="email" class="form-control" id="email_fp" name="email"
-                                placeholder="Enter your email...">
+                            <input type="email" class="form-control" id="email_fp" name="email" required>
                         </div>
-                        <div class="form-text mb-3">
-                            <p>💡 Your username can be found in the welcome email sent after you signed up.</p>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100 btn-send-otp">📧 Send OTP</button>
+                        <button type="submit" class="btn-login">Send OTP</button>
                     </form>
+                    <div id="forgotPasswordMessage"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Reset OTP Modal -->
-    <div class="modal fade" id="resetOtpModal" tabindex="-1" aria-labelledby="resetOtpModalLabel" aria-hidden="true">
+    <!-- OTP Verification Modal -->
+    <div class="modal fade" id="otpVerificationModal" tabindex="-1" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="resetOtpModalLabel">🔐 Verify OTP</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title">Verify OTP</h5>
                 </div>
                 <div class="modal-body">
-                    <form action="/reset_password_otp" method="POST" id="resetOtpForm">
+                    <form id="otpVerificationForm">
                         <div class="mb-3">
-                            <label for="otp" class="form-label"><b>📱 Enter OTP:</b></label>
-                            <input type="text" class="form-control" name="otp" placeholder="Enter 6-digit OTP"
-                                maxlength="6" required>
+                            <label for="otp_fp" class="form-label"><b>Enter OTP:</b></label>
+                            <input type="text" class="form-control" id="otp_fp" name="otp" maxlength="6" required>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">✅ Verify OTP</button>
+                        <button type="submit" class="btn-login">Verify</button>
                     </form>
+                    <div id="otpMessage"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Set New Password Modal -->
-    <div class="modal fade" id="setNewPasswordModal" tabindex="-1" aria-labelledby="setNewPasswordModalLabel"
-        aria-hidden="true">
+    <!-- Reset Password Modal -->
+    <div class="modal fade" id="resetPasswordModal" tabindex="-1" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="setNewPasswordModalLabel">🔒 Set New Password</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title">Set New Password</h5>
                 </div>
                 <div class="modal-body">
-                    <form action="/set_new_password" method="POST" id="setNewPasswordForm">
+                    <form id="resetPasswordForm">
                         <div class="mb-3">
-                            <label for="new_password" class="form-label"><b>🔑 New Password:</b></label>
-                            <input type="password" class="form-control" name="new_password"
-                                placeholder="Enter new password" required>
+                            <label for="new_password" class="form-label"><b>New Password:</b></label>
+                            <input type="password" class="form-control" id="new_password" name="new_password" required>
                         </div>
                         <div class="mb-3">
-                            <label for="confirm_password" class="form-label"><b>🔑 Confirm Password:</b></label>
-                            <input type="password" class="form-control" name="confirm_password"
-                                placeholder="Confirm new password" required>
+                            <label for="confirm_password" class="form-label"><b>Confirm Password:</b></label>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">🔄 Reset Password</button>
+                        <button type="submit" class="btn-login">Reset Password</button>
                     </form>
+                    <div id="resetMessage"></div>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        $(document).ready(function () {
-            // Enhanced form navigation
-            $('form').on('keydown', 'input', function (e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    var inputs = $(this).closest('form').find('input:not([type=hidden])');
-                    var idx = inputs.index(this);
-                    if (idx >= 0 && idx + 1 < inputs.length) {
-                        inputs.eq(idx + 1).focus();
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+        const themeIcon = themeToggle.querySelector('i');
+
+        const savedTheme = localStorage.getItem('todomate-theme') || 'dark';
+        htmlElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('todomate-theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            themeIcon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        // Forgot Password Flow
+        $('#forgotPasswordForm').on('submit', function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/forgot_password',
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        $('#forgotPasswordModal').modal('hide');
+                        $('#otpVerificationModal').modal('show');
                     } else {
-                        // If it's the last input, submit the form
-                        $(this).closest('form').find('button[type=submit]').click();
+                        $('#forgotPasswordMessage').html('<div class="alert alert-danger mt-2">' + response.error + '</div>');
                     }
                 }
             });
+        });
 
-            // Add loading animation to button on form submit
-            $('#loginForm').on('submit', function () {
-                $('.btn-login').addClass('loading').text('Logging in...');
-            });
-
-            // Enhanced focus animations
-            $('.form-control').on('focus', function () {
-                $(this).parent().addClass('focused');
-            }).on('blur', function () {
-                $(this).parent().removeClass('focused');
-            });
-
-            // Add subtle hover effects to form groups
-            $('.mb-3').hover(
-                function () {
-                    $(this).find('.form-control').css('transform', 'translateY(-1px)');
-                },
-                function () {
-                    if (!$(this).find('.form-control').is(':focus')) {
-                        $(this).find('.form-control').css('transform', 'translateY(0)');
+        $('#otpVerificationForm').on('submit', function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/reset_password_otp',
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        $('#otpVerificationModal').modal('hide');
+                        $('#resetPasswordModal').modal('show');
+                    } else {
+                        $('#otpMessage').html('<div class="alert alert-danger mt-2">' + response.error + '</div>');
                     }
                 }
-            );
-
-            // Forgot Password Form Handler
-            $('#forgotPasswordForm').on('submit', function (e) {
-                e.preventDefault();
-
-                // 🔹 Add loading animation & text change
-                $('.btn-send-otp').addClass('loading').text('Sending OTP...');
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/forgot_password',
-                    data: $(this).serialize(),
-                    success: function (response) {
-                        if (response.success) {
-                            var forgotPasswordModal = bootstrap.Modal.getInstance(document.getElementById('forgotPasswordModal'));
-                            forgotPasswordModal.hide();
-                            var resetOtpModal = new bootstrap.Modal(document.getElementById('resetOtpModal'));
-                            resetOtpModal.show();
-                        } else {
-                            alert(response.error);
-                        }
-                    },
-                    error: function () {
-                        alert('Something went wrong. Try again.');
-                    },
-                    complete: function () {
-                        // 🔹 Always reset button after AJAX finishes
-                        $('.btn-send-otp').removeClass('loading').text('📧 Send OTP');
-                    }
-                });
             });
+        });
 
-
-            // Handle the submission of the reset OTP form
-            $('#resetOtpForm').on('submit', function (e) {
-                e.preventDefault();
-                $.ajax({
-                    type: 'POST',
-                    url: '/reset_password_otp',
-                    data: $(this).serialize(),
-                    success: function (response) {
-                        if (response.success) {
-                            // Close the OTP modal and open the new password modal
-                            var resetOtpModal = bootstrap.Modal.getInstance(document.getElementById('resetOtpModal'));
-                            resetOtpModal.hide();
-                            var setNewPasswordModal = new bootstrap.Modal(document.getElementById('setNewPasswordModal'));
-                            setNewPasswordModal.show();
-                        } else {
-                            // Display error message
-                            alert(response.error);
-                        }
+        $('#resetPasswordForm').on('submit', function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/set_new_password',
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        window.location.href = response.redirect_url;
+                    } else {
+                        $('#resetMessage').html('<div class="alert alert-danger mt-2">' + response.error + '</div>');
                     }
-                });
-            });
-
-            // Handle the submission of the new password form
-            $('#setNewPasswordForm').on('submit', function (e) {
-                e.preventDefault();
-                $.ajax({
-                    type: 'POST',
-                    url: '/set_new_password',
-                    data: $(this).serialize(),
-                    success: function (response) {
-                        if (response.success) {
-                            // Redirect to login with success message
-                            window.location.href = response.redirect_url;
-                        } else {
-                            alert(response.error);
-                        }
-                    }
-                });
+                }
             });
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>

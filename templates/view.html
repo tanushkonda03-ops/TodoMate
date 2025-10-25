@@ -1,568 +1,227 @@
-<html>
-
+<!doctype html>
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='todo-favicon.png') }}">
-    <title>View Todo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <title>View Todos - TodoMate</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root[data-theme="dark"] {
+            --primary-gradient-start: #667eea;
+            --primary-gradient-end: #764ba2;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-border: rgba(255, 255, 255, 0.2);
+            --text-primary: white;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --navbar-bg: rgba(255, 255, 255, 0.1);
         }
 
+        :root[data-theme="light"] {
+            --primary-gradient-start: #667eea;
+            --primary-gradient-end: #764ba2;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(102, 126, 234, 0.2);
+            --text-primary: #1e293b;
+            --text-secondary: #334155;
+            --navbar-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-end) 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             position: relative;
             overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background:
-                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
-            z-index: -1;
-            animation: backgroundShift 15s ease-in-out infinite;
-        }
-
-        @keyframes backgroundShift {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.8;
-            }
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0px) rotate(0deg);
-            }
-
-            50% {
-                transform: translateY(-20px) rotate(5deg);
-            }
-        }
-
-        .floating-shapes {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-        }
-
-        .shape {
-            position: absolute;
-            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .shape:nth-child(1) {
-            width: 80px;
-            height: 80px;
-            top: 20%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .shape:nth-child(2) {
-            width: 120px;
-            height: 120px;
-            top: 60%;
-            right: 10%;
-            animation-delay: 2s;
-        }
-
-        .shape:nth-child(3) {
-            width: 60px;
-            height: 60px;
-            bottom: 20%;
-            left: 20%;
-            animation-delay: 4s;
+            transition: all 0.3s ease;
         }
 
         .navbar {
-            background: rgba(255, 255, 255, 0.1) !important;
+            background: var(--navbar-bg) !important;
             backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            border-bottom: 1px solid var(--card-border);
+            transition: all 0.3s ease;
         }
 
-        .navbar-brand {
-            color: white !important;
-            font-weight: bold;
+        .navbar-brand { color: var(--text-primary) !important; font-weight: bold; }
+        .nav-link { color: var(--text-secondary) !important; transition: all 0.3s ease; }
+        .nav-link:hover { color: var(--text-primary) !important; }
+
+        .theme-toggle {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 1rem;
+        }
+
+        .theme-toggle i { color: var(--text-primary); font-size: 1.2rem; }
+
+        .todo-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--card-border);
             transition: all 0.3s ease;
         }
 
-        .navbar-brand:hover {
-            transform: scale(1.05);
-            color: #f8f9fa !important;
-        }
-
-        .navbar-brand img {
-            transition: all 0.3s ease;
-        }
-
-        .navbar-brand:hover img {
-            transform: rotate(360deg);
-        }
-
-        .nav-link {
-            color: rgba(255, 255, 255, 0.9) !important;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .nav-link:hover {
-            color: white !important;
-            transform: translateY(-2px);
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 50%;
-            background: white;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .btn {
-            border-radius: 10px;
+        .todo-section h3 {
+            color: var(--text-primary);
             font-weight: 600;
-            transition: all 0.3s ease;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
         }
 
-        .btn-danger {
-            background: linear-gradient(135deg, #dc3545, #c82333);
-            border: none;
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        .accordion-item {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid var(--card-border) !important;
+            border-radius: 12px !important;
+            margin-bottom: 1rem;
         }
 
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        .accordion-button {
+            background: rgba(102, 126, 234, 0.1) !important;
+            color: var(--text-primary) !important;
+            font-weight: 600;
+        }
+
+        .accordion-body {
+            background: rgba(102, 126, 234, 0.05);
+            color: var(--text-secondary);
         }
 
         .btn-success {
             background: linear-gradient(135deg, #28a745, #20c997);
             border: none;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
         }
 
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-        }
-
-        .container {
-            margin: 2rem auto;
-            max-width: 1200px;
-        }
-
-        .todo-section {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow:
-                0 8px 32px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .todo-section:hover {
-            transform: translateY(-5px);
-            box-shadow:
-                0 15px 40px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-
-        .todo-section h3 {
-            color: white;
-            font-weight: 600;
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .todo-section.active h3::before {
-            content: '📋';
-            font-size: 1.5rem;
-        }
-
-        .todo-section.completed h3::before {
-            content: '✅';
-            font-size: 1.5rem;
-        }
-
-        .accordion-item {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
-            border-radius: 12px !important;
-            margin-bottom: 1rem;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .accordion-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .accordion-button {
-            background: rgba(255, 255, 255, 0.1) !important;
-            color: white !important;
-            font-weight: 600;
-            border: none !important;
-            padding: 1rem 1.5rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .accordion-button:not(.collapsed) {
-            background: rgba(255, 255, 255, 0.15) !important;
-            color: white !important;
-            box-shadow: none !important;
-        }
-
-        .accordion-button::after {
-            filter: brightness(0) invert(1);
-        }
-
-        .accordion-body {
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.9);
-            padding: 1.5rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-outline-success {
-            background: rgba(40, 167, 69, 0.1);
-            border: 1px solid rgba(40, 167, 69, 0.5);
-            color: #28a745;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-outline-success:hover {
-            background: #28a745;
-            border-color: #28a745;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-        }
-
-        .btn-outline-danger {
-            background: rgba(220, 53, 69, 0.1);
-            border: 1px solid rgba(220, 53, 69, 0.5);
-            color: #dc3545;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-outline-danger:hover {
-            background: #dc3545;
-            border-color: #dc3545;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
-        }
-
-        .alert {
-            background: rgba(13, 202, 240, 0.15);
-            border: 1px solid rgba(13, 202, 240, 0.3);
-            border-radius: 12px;
-            color: #b6effb;
-            backdrop-filter: blur(10px);
-            margin-top: 1rem;
-        }
-
-        .toast {
-            background: rgba(220, 53, 69, 0.95) !important;
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .toast-body {
-            color: white;
-            font-weight: 500;
-        }
-
-        /* ✅ Ensure toast is always visible */
-        .toast-container {
-            z-index: 2000;
-        }
-
-        /* ✅ On mobile, move to top center */
-        @media (max-width: 768px) {
-            .toast-container {
-                top: 0 !important;
-                right: 50% !important;
-                bottom: auto !important;
-                transform: translateX(50%);
-                padding-top: 1rem;
-            }
-
-            .container {
-                margin: 1rem auto;
-                padding: 0 1rem;
-            }
-
-            .todo-section {
-                padding: 1.5rem;
-                margin: 0 0.5rem 1.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .todo-section h3 {
-                font-size: 1.5rem;
-            }
-
-            .accordion-button {
-                padding: 0.75rem 1rem;
-                font-size: 0.9rem;
-            }
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            border: none;
         }
     </style>
-
 </head>
 
 <body>
-    <div class="floating-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
-
-    <nav class="navbar navbar-expand-lg" data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
-                <img src="{{ url_for('static', filename='todo-removebg-preview.png') }}" alt="Logo" width="32"
-                    height="31" class="d-inline-block align-text-top">
+                <img src="{{ url_for('static', filename='todo-removebg-preview.png') }}" alt="Logo" width="32" height="31">
                 <b>TodoMate</b>
             </a>
-
-            <!-- Mobile Toggle -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <!-- Collapsible Menu -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Add Todo</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.path == '/view' %}active{% endif %}" href="/view">View Todo</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="/">Add Todo</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/view">View Todo</a></li>
                 </ul>
-
-                <!-- ✅ Login/Logout now inside toggle -->
-                <div class="d-flex">
+                <div class="d-flex align-items-center">
                     {% if authflag %}
                     <span class="text-white fw-bold me-2">Welcome, {{ username }}</span>
                     <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
                     {% else %}
-                    <a href="/login" class="btn btn-success">Login</a>
+                    <a href="/login" class="btn btn-success btn-sm">Login</a>
                     {% endif %}
+                    <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
                 </div>
             </div>
         </div>
     </nav>
 
-
-    <!-- section for active todos -->
-    <section>
-        <div class="container my-3">
-            <div class="todo-section active">
-                <h3><b>Active Todos</b></h3>
-                <div class="accordion" id="accordionExample">
-                    {% if active_todos|length == 0 %}
-                    <div class="alert alert-primary" role="alert">
-                        You don't have any Todo task, please add some
-                    </div>
-                    {% else %}
-                    {% for todo in active_todos %}
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{todo.id}}">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse{{todo.id}}" aria-expanded="false"
-                                aria-controls="collapse{{todo.id}}">
-                                <b>Sr.No.: {{loop.index}} | {{ todo.title if authflag else todo['title'] }}</b>
-                            </button>
-                        </h2>
-                        <div id="collapse{{todo.id}}" class="accordion-collapse collapse"
-                            aria-labelledby="heading{{todo.id}}" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                <b>Description:</b> {{ todo.desc if authflag else todo['desc'] }}
-                                <br>
-                                <b>Due:</b> {{todo.due_date}}
-                                <br>
-                                <a href="{{ url_for('complete_todo', id=todo.id if authflag else loop.index0) }}"
-                                    style="text-decoration: none;">
-                                    <button type="button" class="btn btn-outline-success my-3 mb-0 btn-sm">Done</button>
-                                </a>
-                                {% if authflag %}
-                                <a href="{{ url_for('edit_todo', id=todo.id) }}">
-                                    <button type="button"
-                                        class="btn btn-outline-success my-3 mb-0 ms-2 btn-sm">Edit</button>
-                                </a>
-                                {% endif %}
-                                {% if not authflag %}
-                                <button type="button" class="btn btn-outline-success my-3 mb-0 ms-2 btn-sm"
-                                    data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right"
-                                    data-bs-content="Please login to use this option">
-                                    Edit
-                                </button>
-                                {% endif %}
-                            </div>
+    <div class="container my-3">
+        <div class="todo-section">
+            <h3>📋 Active Todos</h3>
+            <div class="accordion" id="accordionExample">
+                {% if active_todos|length == 0 %}
+                <div class="alert alert-primary">You don't have any Todo task, please add some</div>
+                {% else %}
+                {% for todo in active_todos %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{todo.id}}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{todo.id}}">
+                            <b>Sr.No.: {{loop.index}} | {{ todo.title if authflag else todo['title'] }}</b>
+                        </button>
+                    </h2>
+                    <div id="collapse{{todo.id}}" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <b>Description:</b> {{ todo.desc if authflag else todo['desc'] }}<br>
+                            <b>Due:</b> {{todo.due_date}}<br>
+                            <a href="{{ url_for('complete_todo', id=todo.id if authflag else loop.index0) }}">
+                                <button class="btn btn-outline-success btn-sm my-3">Done</button>
+                            </a>
+                            {% if authflag %}
+                            <a href="{{ url_for('edit_todo', id=todo.id) }}">
+                                <button class="btn btn-outline-success btn-sm ms-2">Edit</button>
+                            </a>
+                            {% endif %}
                         </div>
                     </div>
-                    {% endfor %}
-                    {% endif %}
                 </div>
+                {% endfor %}
+                {% endif %}
             </div>
         </div>
-    </section>
 
-    {% if error_message %}
-    <div class="container">
-        <div class="alert alert-primary" role="alert">
-            {{error_message}}
+        <div class="todo-section">
+            <h3>✅ Completed Todos</h3>
+            <div class="accordion" id="accordionExample2">
+                {% if completed_todos|length == 0 %}
+                <div class="alert alert-primary">You don't have any Completed Todo task.</div>
+                {% else %}
+                {% for todo in completed_todos %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{todo.id}}c">
+                            <b>Sr.No.: {{loop.index}} | {{ todo.title if authflag else todo['title'] }}</b>
+                        </button>
+                    </h2>
+                    <div id="collapse{{todo.id}}c" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                            <b>Description:</b> {{ todo.desc if authflag else todo['desc'] }}<br>
+                            <a href="{{ url_for('retrieve_todo', id=todo.id if authflag else loop.index0) }}">
+                                <button class="btn btn-outline-success btn-sm my-3">Mark Active</button>
+                            </a>
+                            <a href="{{ url_for('delete', id=todo.id if authflag else loop.index0) }}">
+                                <button class="btn btn-outline-danger btn-sm ms-2">Delete</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
         </div>
     </div>
-    {% endif %}
 
-    <!-- section for completed todos -->
-    <section>
-        <div class="container my-3">
-            <div class="todo-section completed">
-                <h3><b>Completed Todos</b></h3>
-                <div class="accordion" id="accordionExample2">
-                    {% if completed_todos|length == 0 %}
-                    <div class="alert alert-primary" role="alert">
-                        You don't have any Completed Todo task.
-                    </div>
-                    {% else %}
-                    {% for todo in completed_todos %}
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{todo.id}}completed">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapse{{todo.id}}completed" aria-expanded="false"
-                                aria-controls="collapse{{todo.id}}completed">
-                                <b>Sr.No.: {{loop.index}} | {{ todo.title if authflag else todo['title'] }}</b>
-                            </button>
-                        </h2>
-                        <div id="collapse{{todo.id}}completed" class="accordion-collapse collapse"
-                            aria-labelledby="heading{{todo.id}}completed" data-bs-parent="#accordionExample2">
-                            <div class="accordion-body">
-                                <b>Description:</b>{{ todo.desc if authflag else todo['desc'] }}
-                                <br>
-                                <b>Due:</b>{{todo.due_date}}
-                                <br>
-                                <a href="{{ url_for('retrieve_todo', id=todo.id if authflag else loop.index0) }}"
-                                    style="text-decoration: none;">
-                                    <button type="button"
-                                        class="btn btn-outline-success my-3 mb-0 btn-sm">Retrieve</button>
-                                </a>
-                                <a href="{{ url_for('delete', id=todo.id if authflag else loop.index0) }}">
-                                    <button type="button"
-                                        class="btn btn-outline-danger my-3 mb-0 ms-2 btn-sm">Delete</button>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- pop-up alerts for overdue todos -->
-    <!-- pop-up alerts for overdue todos -->
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-    {% for todo in todos %}
-        {% if todo.due_date and todo.due_date < now and todo.status == 'active' %}
-            <div class="toast align-items-center text-bg-danger border-0 my-2" role="alert" aria-live="assertive"
-                 aria-atomic="true">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        ⚠️ <b>{{ loop.index }} | {{ todo.title }}</b> is overdue!
-                        (Due: {{ todo.due_date|fmt_dt }})
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                            aria-label="Close"></button>
-                </div>
-            </div>
-        {% endif %}
-    {% endfor %}
-</div>
-
-
-    <!-- Bootstrap 5 JS (with Popper) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var toastElList = [].slice.call(document.querySelectorAll('.toast'));
-            var toastList = toastElList.map(function (toastEl) {
-                return new bootstrap.Toast(toastEl, { delay: 5000 });
-            });
-            toastList.forEach(toast => {
-                toast.show(); // show programmatically
-                toast._element.classList.add("show"); // ensure visible on mobile
-            });
-        });
+        const themeToggle = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+        const themeIcon = themeToggle.querySelector('i');
 
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('[data-bs-toggle="popover"]').forEach(function (el) {
-                new bootstrap.Popover(el);
-            });
+        const savedTheme = localStorage.getItem('todomate-theme') || 'dark';
+        htmlElement.setAttribute('data-theme', savedTheme);
+        themeIcon.className = savedTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+
+        themeToggle.addEventListener('click', () => {
+            const newTheme = htmlElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('todomate-theme', newTheme);
+            themeIcon.className = newTheme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
         });
     </script>
-
 </body>
-
 </html>
