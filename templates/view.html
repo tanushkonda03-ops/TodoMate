@@ -508,6 +508,27 @@
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
+    </section>
+
+    <!-- pop-up alerts for overdue todos -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        {% for todo in todos %}
+            {% if todo.due_date and todo.due_date < now and todo.status == 'active' %}
+                <div class="toast align-items-center text-bg-danger border-0 my-2" role="alert" aria-live="assertive"
+                     aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ⚠️ <b>{{ loop.index }} | {{ todo.title }}</b> is overdue!
+                            (Due: {{ todo.due_date|fmt_dt }})
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                                aria-label="Close"></button>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+=======
     </section>
 
     <!-- pop-up alerts for overdue todos -->
@@ -532,6 +553,7 @@
         </div>
     {% endif %}
 {% endfor %}
+>>>>>>> 0ac6a3902dbb136418561ea3153939223c323abf
     </div>
 
     <!-- Bootstrap 5 JS (with Popper) -->

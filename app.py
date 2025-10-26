@@ -24,6 +24,10 @@ else:
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
+with app.app_context():
+    db.create_all()
+
 app.secret_key = os.getenv("SECRET_KEY", "fallback_secret_key")  # Needed for sessions to work securely
 # Email Configuration
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -34,15 +38,6 @@ app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
 app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_USERNAME")
 
 mail = Mail(app)
-
-# app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-# app.config['MAIL_PORT'] = 587
-# app.config['MAIL_USE_TLS'] = True
-# app.config['MAIL_USERNAME'] = 'yourtodomate@gmail.com'  # Your email address
-# app.config['MAIL_PASSWORD'] = 'zogl ggjy qglb llef'            # Your generated app password
-# app.config['MAIL_DEFAULT_SENDER'] = 'yourtodomate@gmail.com'
-
-
 
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
