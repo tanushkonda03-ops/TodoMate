@@ -28,7 +28,8 @@ db = SQLAlchemy(app)
 print("ATTEMPTING TO CREATE DATABASE TABLES...") # <-- Add this print statement
 with app.app_context():
     db.create_all()
-    print("db.create_all() EXECUTED.") # <-- Add this print statement
+    db.session.commit()
+    print("db.create_all() EXECUTED AND COMMITTED.") # <-- Add this print statement
 print("FINISHED DATABASE SETUP BLOCK.")
 
 app.secret_key = os.getenv("SECRET_KEY", "fallback_secret_key")  # Needed for sessions to work securely
