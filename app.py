@@ -43,6 +43,7 @@ app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_USERNAME")
 mail = Mail(app)
 
 class Todo(db.Model):
+    __tablename__ = 'todo'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(50), nullable=False)
     desc = db.Column(db.String(150), nullable=True)
@@ -53,6 +54,7 @@ class Todo(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.Uid'), nullable=False)
 
 class User(db.Model):
+    __tablename__ = 'user'
     Uid = db.Column(db.Integer, primary_key=True, autoincrement=True)
     Uname = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
